@@ -1,2 +1,2 @@
-[tool.vercel]
-entrypoint = "backend.app:app"
+[project.scripts]
+app = "backend.app:app"
