@@ -2,6 +2,10 @@ from flask import Flask, jsonify, render_template, request
 import pandas as pd
 import joblib
 import os
+import sklearn
+
+
+print("SCIKIT-LEARN VERSION:", sklearn.__version__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_DIR = os.path.dirname(BASE_DIR)
