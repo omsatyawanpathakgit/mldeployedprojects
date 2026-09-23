@@ -12,4 +12,4 @@ dependencies = [
 ]
 
 [project.scripts]
-app = "backend.app:app"
+app = "api.app:app"
