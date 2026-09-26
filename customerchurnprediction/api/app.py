@@ -3,19 +3,17 @@ import pandas as pd
 import joblib
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 app = Flask(
     __name__,
     template_folder=os.path.join(BASE_DIR, "frontend")
 )
 
-
 MODEL_PATH = os.path.join(
     BASE_DIR,
     "CustomerChurnPredictionModel.pkl"
 )
-
 
 model = joblib.load(MODEL_PATH)
 
@@ -28,39 +26,19 @@ def home():
     if request.method == "POST":
 
         single_data = pd.DataFrame([{
-
             "gender": request.form["gender"],
-
             "Partner": request.form["Partner"],
-
             "Dependents": request.form["Dependents"],
-
-            "SeniorCitizen": int(
-                request.form["SeniorCitizen"]
-            ),
-
-            "tenure": int(
-                request.form["tenure"]
-            ),
-
+            "SeniorCitizen": int(request.form["SeniorCitizen"]),
+            "tenure": int(request.form["tenure"]),
             "PhoneService": request.form["PhoneService"],
-
             "InternetService": request.form["InternetService"],
-
             "TechSupport": request.form["TechSupport"],
-
             "Contract": request.form["Contract"],
-
             "PaymentMethod": request.form["PaymentMethod"],
-
-            "TotalCharges": float(
-                request.form["TotalCharges"]
-            ),
-
+            "TotalCharges": float(request.form["TotalCharges"]),
             "StreamingTV": request.form["StreamingTV"],
-
             "StreamingMovies": request.form["StreamingMovies"]
-
         }])
 
         pred = model.predict(single_data)[0]
@@ -74,7 +52,3 @@ def home():
         "index.html",
         prediction=prediction
     )
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
