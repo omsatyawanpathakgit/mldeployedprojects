@@ -1,0 +1,7 @@
+dataset.csv
+*.ipynb
+*.pdf
+*.mp4
+*.csv
+__pycache__
+.ipynb_checkpoints
