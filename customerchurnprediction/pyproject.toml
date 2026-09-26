@@ -1,0 +1,16 @@
+[project]
+name = "customerchurnprediction"
+version = "0.0.0"
+requires-python = ">=3.12,<3.13"
+
+dependencies = [
+    "flask",
+    "pandas",
+    "joblib",
+    "scikit-learn",
+    "numpy",
+    "imbalanced-learn"
+]
+
+[project.scripts]
+app = "api.app:app"
