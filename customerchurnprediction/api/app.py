@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request
+import pandas as pd
+import joblib
 import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -8,36 +10,49 @@ app = Flask(
     template_folder=os.path.join(BASE_DIR, "frontend")
 )
 
+MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "CustomerChurnPredictionModel.pkl"
+)
 
-@app.route("/")
+model = joblib.load(MODEL_PATH)
+
+
+@app.route("/", methods=["GET", "POST"])
 def home():
 
-    try:
-        import pandas as pd
-        import joblib
+    prediction = None
 
-        model_path = os.path.join(
-            BASE_DIR,
-            "CustomerChurnPredictionModel.pkl"
-        )
+    if request.method == "POST":
 
-        print("BASE_DIR:", BASE_DIR)
-        print("MODEL_PATH:", model_path)
-        print("MODEL EXISTS:", os.path.exists(model_path))
+        single_data = pd.DataFrame([{
+            "gender": request.form["gender"],
+            "Partner": request.form["Partner"],
+            "Dependents": request.form["Dependents"],
+            "SeniorCitizen": int(request.form["SeniorCitizen"]),
+            "tenure": int(request.form["tenure"]),
+            "PhoneService": request.form["PhoneService"],
+            "InternetService": request.form["InternetService"],
+            "TechSupport": request.form["TechSupport"],
+            "Contract": request.form["Contract"],
+            "PaymentMethod": request.form["PaymentMethod"],
+            "TotalCharges": float(request.form["TotalCharges"]),
+            "StreamingTV": request.form["StreamingTV"],
+            "StreamingMovies": request.form["StreamingMovies"]
+        }])
 
-        model = joblib.load(model_path)
+        pred = model.predict(single_data)[0]
 
-        return """
-        <h1>Customer Churn App</h1>
-        <p>Flask is working.</p>
-        <p>Model loaded successfully.</p>
-        """
+        if pred == 0:
+            prediction = "This customer will NOT churn."
+        else:
+            prediction = "This customer WILL churn."
 
-    except Exception as error:
+    return render_template(
+        "index.html",
+        prediction=prediction
+    )
 
-        print("MODEL ERROR:", repr(error))
 
-        return f"""
-        <h1>Model Loading Error</h1>
-        <pre>{repr(error)}</pre>
-        """, 500
+if __name__ == "__main__":
+    app.run()
